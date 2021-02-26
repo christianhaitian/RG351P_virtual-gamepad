@@ -28,6 +28,7 @@ namespace joypads {
 					j_ps3_usb,
 					j_xbox_360,
 					j_rg351p,
+					j_vkb,
 					j_oga;
 
 	// supported input joypads
@@ -38,4 +39,3 @@ namespace joypads {
 }
 
 #endif //_JOYPADS_H_
-

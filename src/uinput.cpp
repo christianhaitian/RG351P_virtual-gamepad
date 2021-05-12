@@ -342,7 +342,7 @@ namespace {
 
 			// add the final touches
 			uinput_user_dev	ud = {0};
-			strncpy(ud.name, "odroidgo2_joypad", UINPUT_MAX_NAME_SIZE-1);
+			strncpy(ud.name, "GO-Advance Gamepad (rev 1.1)", UINPUT_MAX_NAME_SIZE-1);
 			ud.id.bustype = joypads::j_oga.bus;
 			ud.id.vendor = joypads::j_oga.vendor;
 			ud.id.product = joypads::j_oga.product;
@@ -504,7 +504,7 @@ namespace {
 	};
 
 	// layered conversion
-	class rg351p_2_xbox : public xbox_target {
+	class j_oga_2_xbox : public xbox_target {
 	public:
 		virtual bool translate_event(input_event& ev) {
 			switch(ev.type) {
@@ -513,22 +513,26 @@ namespace {
 			case EV_KEY:{
 				switch(ev.code) {
 				// setup buttons
-				case BTN_TR: ev.code = BTN_SELECT; break;
-				case BTN_TL: ev.code = BTN_START; break;
+				case BTN_TRIGGER_HAPPY1: ev.code = BTN_SELECT; break;
+				case BTN_TRIGGER_HAPPY6: ev.code = BTN_START; break;
 				// action buttons
-				case BTN_C: ev.code = BTN_X; break; // square
+				case BTN_WEST: ev.code = BTN_X; break; // square
 				case BTN_NORTH: ev.code = BTN_Y; break; // triangle
 				case BTN_SOUTH: ev.code = BTN_A; break; // cross
 				case BTN_EAST: ev.code = BTN_B; break; // round
 				// back
-				case BTN_WEST: ev.code = BTN_TL; break;
-				case BTN_Z: ev.code = BTN_TR; break;
+				case BTN_TRIGGER_HAPPY4: ev.code = BTN_TL; break;
+				case BTN_TRIGGER_HAPPY3: ev.code = BTN_TR; break;
 				// analog stick buttons
 				case BTN_TL2: ev.code = BTN_THUMBL; break;
 				case BTN_TR2: ev.code = BTN_THUMBR; break;
 				// do not report any other button
 				case BTN_START: { ev.type = EV_ABS; ev.code = ABS_Z; ev.value = ev.value*255;}  break;
 				case BTN_SELECT: { ev.type = EV_ABS; ev.code = ABS_RZ; ev.value = ev.value*255;}  break;
+				case BTN_DPAD_UP: { ev.type = EV_ABS; ev.code = ABS_HAT0Y; ev.value = ev.value*-1;}; break;
+				case BTN_DPAD_DOWN: { ev.type = EV_ABS; ev.code = ABS_HAT0Y; ev.value = ev.value*1;}; break;
+				case BTN_DPAD_LEFT: { ev.type = EV_ABS; ev.code = ABS_HAT0X; ev.value = ev.value*-1;}; break;
+				case BTN_DPAD_RIGHT: { ev.type = EV_ABS; ev.code = ABS_HAT0X; ev.value = ev.value*1;}; break;
 				default:
 					return false;
 				}
@@ -539,8 +543,32 @@ namespace {
 				case ABS_HAT0Y: { ev.type = EV_ABS; ev.code = ABS_HAT0Y; ev.value = ev.value;} break; // up
 				case ABS_HAT0X: { ev.type = EV_ABS; ev.code = ABS_HAT0X; ev.value = ev.value;} break; // left
 				// left stick
-				case ABS_Z: { ev.code = ABS_X; ev.value = (ev.value*(32768*2)/4095-32768) * -1;} break;
-				case ABS_RX: { ev.code = ABS_Y; ev.value = (ev.value*(32768*2)/4095-32768) * -1;} break;
+				case ABS_X:
+                     if (ev.value <= -600 )
+                     {
+				        ev.code = ABS_X; ev.value = (ev.value*(32768*2)/4095-32768) * 1; break;
+				     }
+                     else if  (ev.value >= 400 )
+                     {
+				        ev.code = ABS_X; ev.value = (ev.value*(32768*2)/4095-32768) * -1; break;
+				     }
+                     else
+                     {
+				        ev.code = ABS_X; ev.value = 0; break;
+				     }
+				case ABS_Y: 
+                     if (ev.value <= -600 )
+                     {
+				        ev.code = ABS_Y; ev.value = (ev.value*(32768*2)/4095-32768) * 1; break;
+				     }
+                     else if  (ev.value >= 400 )
+                     {
+				        ev.code = ABS_Y; ev.value = (ev.value*(32768*2)/4095-32768) * -1; break;
+				     }
+                     else
+                     {
+				        ev.code = ABS_Y; ev.value = 0; break;
+				     }
 				// right stick
 				case ABS_RY: { ev.code = ABS_RX; ev.value = ev.value*(32768*2)/4095-32768;} break;
 				case ABS_RZ: { ev.code = ABS_RY; ev.value = ev.value*(32768*2)/4095-32768;} break;
@@ -699,7 +727,7 @@ namespace {
 		}
 	};
 
-	class rg351p_2_vkb : public vkb_target {
+	class j_oga_2_vkb : public vkb_target {
 	public:
 		int direction_hatX = KEY_LEFT;
 		int direction_hatY = KEY_UP;
@@ -710,15 +738,19 @@ namespace {
 			case EV_KEY:{
 				switch(ev.code) {
 				// setup buttons
-				case BTN_TL: ev.code = KEY_ENTER; break;    //start
+				case BTN_TRIGGER_HAPPY6: ev.code = KEY_ENTER; break;    //start
 				// action buttons
-				case BTN_C: ev.code = KEY_Z; break; // square
+				case BTN_WEST: ev.code = KEY_Z; break; // square
 				case BTN_NORTH: ev.code = KEY_X; break; // triangle
 				case BTN_SOUTH: ev.code = KEY_S; break; // cross
 				case BTN_EAST: ev.code = KEY_A; break; // round
 				// back
-				case BTN_WEST: ev.code = KEY_D; break;
-				case BTN_Z: ev.code = KEY_F; break;
+				case BTN_TRIGGER_HAPPY1: ev.code = KEY_D; break;
+				case BTN_TRIGGER_HAPPY4: ev.code = KEY_F; break;
+				case BTN_DPAD_UP: ev.code = KEY_UP; break;
+				case BTN_DPAD_DOWN: ev.code = KEY_DOWN; break;
+				case BTN_DPAD_LEFT: ev.code = KEY_LEFT; break;
+				case BTN_DPAD_RIGHT: ev.code = KEY_RIGHT; break;
 				default:
 					return false;
 				}
@@ -827,16 +859,16 @@ uinput::pad* uinput::get_pad(const events::js_desc *in_type, const events::js_de
 	// switch logic... a bit verbose for now
 	if(out_type == &joypads::j_vkb) {
 		// both the USB and BT version behave the same... 
-		if(in_type == &joypads::j_rg351p)
-			return new rg351p_2_vkb();
+		if(in_type == &joypads::j_oga)
+			return new j_oga_2_vkb();
 	} 
 	// switch logic... a bit verbose for now
 	if(out_type == &joypads::j_xbox_360) {
 		// both the USB and BT version behave the same... 
 		if(in_type == &joypads::j_ps3_bt || in_type == &joypads::j_ps3_usb)
 			return new ps3_2_xbox();
-		if(in_type == &joypads::j_rg351p)
-			return new rg351p_2_xbox();
+		if(in_type == &joypads::j_oga)
+			return new j_oga_2_xbox();
 	} else if(out_type == &joypads::j_ps3_usb || out_type == &joypads::j_ps3_bt) {
 		// both use the same ps3 to pse3, what changes is only the bus type
 		if(in_type == &joypads::j_ps3_usb || in_type == &joypads::j_ps3_bt)
@@ -889,3 +921,4 @@ bool uinput::evt_reader::read(input_event& ev, const int tmout) {
 
 	return true;
 }
+

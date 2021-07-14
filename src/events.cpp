@@ -74,7 +74,7 @@ std::string events::find_event_js(const js_desc** js, js_desc const **out) {
 
 		// linear search for the given vendor/product
 		for(const js_desc** p = js; *p; ++p) {
-			if(id.bustype == (*p)->bus && id.vendor == (*p)->vendor && id.product == (*p)->product && strcmp(name,"GO-Advance Gamepad (rev 1.1)")==0) {
+			if(id.bustype == (*p)->bus && id.vendor == (*p)->vendor && id.product == (*p)->product && strcmp(name,"gameforce_gamepad")==0) {
 				ret = fname;
 				if(out) *out = *p;
 				char	buf[64];

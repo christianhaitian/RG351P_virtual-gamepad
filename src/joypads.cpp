@@ -25,7 +25,7 @@ const events::js_desc	joypads::j_ps3_bt =	{ "ps3_bt", BUS_BLUETOOTH, 0x054c, 0x0
 			joypads::j_ps3_usb =	{ "ps3_usb", BUS_USB, 0x054c, 0x0268, 0x0111 },
 			joypads::j_xbox_360 =	{ "xbox_360", BUS_USB, 0x045e, 0x028e, 0x0110 },
 			joypads::j_rg351p =	{ "rg351p_joypad", BUS_USB, 0x1209, 0x3100, 0x0111 },
-			joypads::j_oga =	{ "oga_joypad", 0x19, 0x484b, 0x1000, 0x101 },
+			joypads::j_oga =	{ "oga_joypad", 0x19, 0x3, 0x3, 0x302 },
 			joypads::j_vkb =	{ "at_vkb", 0x11, 0x1, 0x1, 0xab41 };
 // supported input joypads
 const events::js_desc	*joypads::in[] = {

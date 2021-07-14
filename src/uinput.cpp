@@ -323,12 +323,12 @@ namespace {
 				throw std::runtime_error("Can't UI_SET_KEYBIT BTN_TRIGGER_HAPPY2");
 			if(ioctl(_fd, UI_SET_KEYBIT, BTN_TRIGGER_HAPPY3))
 				throw std::runtime_error("Can't UI_SET_KEYBIT BTN_TRIGGER_HAPPY3");
-			if(ioctl(_fd, UI_SET_KEYBIT, BTN_TRIGGER_HAPPY4))
-				throw std::runtime_error("Can't UI_SET_KEYBIT BTN_TRIGGER_HAPPY4");
+			if(ioctl(_fd, UI_SET_KEYBIT, BTN_SELECT))
+				throw std::runtime_error("Can't UI_SET_KEYBIT BTN_SELECT");
 			if(ioctl(_fd, UI_SET_KEYBIT, BTN_TRIGGER_HAPPY5))
 				throw std::runtime_error("Can't UI_SET_KEYBIT BTN_TRIGGER_HAPPY5");
-			if(ioctl(_fd, UI_SET_KEYBIT, BTN_TRIGGER_HAPPY6))
-				throw std::runtime_error("Can't UI_SET_KEYBIT BTN_TRIGGER_HAPPY6");
+			if(ioctl(_fd, UI_SET_KEYBIT, BTN_START))
+				throw std::runtime_error("Can't UI_SET_KEYBIT BTN_START");
 									
 			// absolute (sticks)
 			if(ioctl(_fd, UI_SET_ABSBIT, ABS_X))
@@ -342,7 +342,7 @@ namespace {
 
 			// add the final touches
 			uinput_user_dev	ud = {0};
-			strncpy(ud.name, "GO-Advance Gamepad (rev 1.1)", UINPUT_MAX_NAME_SIZE-1);
+			strncpy(ud.name, "gameforce_gamepad", UINPUT_MAX_NAME_SIZE-1);
 			ud.id.bustype = joypads::j_oga.bus;
 			ud.id.vendor = joypads::j_oga.vendor;
 			ud.id.product = joypads::j_oga.product;
@@ -513,22 +513,22 @@ namespace {
 			case EV_KEY:{
 				switch(ev.code) {
 				// setup buttons
-				case BTN_TRIGGER_HAPPY1: ev.code = BTN_SELECT; break;
-				case BTN_TRIGGER_HAPPY6: ev.code = BTN_START; break;
+				case BTN_SELECT: ev.code = BTN_SELECT; break;
+				case BTN_START: ev.code = BTN_START; break;
 				// action buttons
-				case BTN_WEST: ev.code = BTN_X; break; // square
-				case BTN_NORTH: ev.code = BTN_Y; break; // triangle
-				case BTN_SOUTH: ev.code = BTN_A; break; // cross
-				case BTN_EAST: ev.code = BTN_B; break; // round
+				case BTN_WEST: ev.code = BTN_Y; break; // square
+				case BTN_NORTH: ev.code = BTN_X; break; // triangle
+				case BTN_SOUTH: ev.code = BTN_B; break; // cross
+				case BTN_EAST: ev.code = BTN_A; break; // round
 				// back
-				case BTN_TRIGGER_HAPPY4: ev.code = BTN_TL; break;
-				case BTN_TRIGGER_HAPPY3: ev.code = BTN_TR; break;
+				case BTN_TRIGGER_HAPPY3: ev.code = BTN_TL; break;
+				case BTN_TRIGGER_HAPPY4: ev.code = BTN_TR; break;
 				// analog stick buttons
 				case BTN_TL2: ev.code = BTN_THUMBL; break;
 				case BTN_TR2: ev.code = BTN_THUMBR; break;
 				// do not report any other button
-				case BTN_START: { ev.type = EV_ABS; ev.code = ABS_Z; ev.value = ev.value*255;}  break;
-				case BTN_SELECT: { ev.type = EV_ABS; ev.code = ABS_RZ; ev.value = ev.value*255;}  break;
+				// case BTN_START: { ev.type = EV_ABS; ev.code = ABS_Z; ev.value = ev.value*255;}  break;
+				// case BTN_SELECT: { ev.type = EV_ABS; ev.code = ABS_RZ; ev.value = ev.value*255;}  break;
 				case BTN_DPAD_UP: { ev.type = EV_ABS; ev.code = ABS_HAT0Y; ev.value = ev.value*-1;}; break;
 				case BTN_DPAD_DOWN: { ev.type = EV_ABS; ev.code = ABS_HAT0Y; ev.value = ev.value*1;}; break;
 				case BTN_DPAD_LEFT: { ev.type = EV_ABS; ev.code = ABS_HAT0X; ev.value = ev.value*-1;}; break;
@@ -543,7 +543,7 @@ namespace {
 				case ABS_HAT0Y: { ev.type = EV_ABS; ev.code = ABS_HAT0Y; ev.value = ev.value;} break; // up
 				case ABS_HAT0X: { ev.type = EV_ABS; ev.code = ABS_HAT0X; ev.value = ev.value;} break; // left
 				// left stick
-				case ABS_X:
+				case ABS_Y:
                      if (ev.value <= -600 )
                      {
 				        ev.code = ABS_X; ev.value = (ev.value*(32768*2)/4095-32768) * 1; break;
@@ -556,7 +556,7 @@ namespace {
                      {
 				        ev.code = ABS_X; ev.value = 0; break;
 				     }
-				case ABS_Y: 
+				case ABS_X: 
                      if (ev.value <= -600 )
                      {
 				        ev.code = ABS_Y; ev.value = (ev.value*(32768*2)/4095-32768) * 1; break;
@@ -738,15 +738,15 @@ namespace {
 			case EV_KEY:{
 				switch(ev.code) {
 				// setup buttons
-				case BTN_TRIGGER_HAPPY6: ev.code = KEY_ENTER; break;    //start
+				case BTN_START: ev.code = KEY_ENTER; break;    //start
 				// action buttons
 				case BTN_WEST: ev.code = KEY_Z; break; // square
 				case BTN_NORTH: ev.code = KEY_X; break; // triangle
 				case BTN_SOUTH: ev.code = KEY_S; break; // cross
 				case BTN_EAST: ev.code = KEY_A; break; // round
 				// back
-				case BTN_TRIGGER_HAPPY1: ev.code = KEY_D; break;
-				case BTN_TRIGGER_HAPPY4: ev.code = KEY_F; break;
+				case BTN_SELECT: ev.code = KEY_D; break;
+				// case BTN_START: ev.code = KEY_F; break;
 				case BTN_DPAD_UP: ev.code = KEY_UP; break;
 				case BTN_DPAD_DOWN: ev.code = KEY_DOWN; break;
 				case BTN_DPAD_LEFT: ev.code = KEY_LEFT; break;
@@ -756,35 +756,35 @@ namespace {
 				}
 			}	return true;
 			case EV_ABS: {
-                if(ev.code == ABS_HAT0Y){
+                if(ev.code == ABS_HAT0X){
 							ev.type = EV_KEY;
 							 if(ev.value == -1){
 							 	ev.code = KEY_UP;
-							 	direction_hatY = KEY_UP;
+							 	direction_hatX = KEY_UP;
                                   ev.value = 1;
 							 }else if(ev.value == 1){
 							 	ev.code = KEY_DOWN;
-							 	direction_hatY = KEY_DOWN;
+							 	direction_hatX = KEY_DOWN;
                                   ev.value = 1;
 							 }else if(ev.value == 0){
-							 	ev.code = direction_hatY;
+							 	ev.code = direction_hatX;
                                   ev.value = 0;
 							 }
 							ev.value = ev.value;
                              return true;
 						 }
-                else if(ev.code == ABS_HAT0X){
+                else if(ev.code == ABS_HAT0Y){
 							ev.type = EV_KEY;
 							 if(ev.value == -1){
 							 	ev.code = KEY_LEFT;
-							 	direction_hatX = KEY_LEFT;
+							 	direction_hatY = KEY_LEFT;
                                   ev.value = 1;
 							 }else if(ev.value == 1){
 							 	ev.code = KEY_RIGHT;
-							 	direction_hatX = KEY_RIGHT;
+							 	direction_hatY = KEY_RIGHT;
                                   ev.value = 1;
 							 }else if(ev.value == 0){
-							 	ev.code = direction_hatX;
+							 	ev.code = direction_hatY;
                                   ev.value = 0;
 							 }
 							
